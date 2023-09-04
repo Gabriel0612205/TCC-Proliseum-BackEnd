@@ -77,7 +77,7 @@ const updatePerfil  = async function(dadosPrf) {
         return false;
     }
     
-    }
+}
 
 
  // ORGANIZADOR   
@@ -94,7 +94,6 @@ const selectAllOrganizer = async () => {
         return false
     }
 }
-
 const insertOrganizer = async (dadosOrg) => {
 
 
@@ -117,7 +116,6 @@ const insertOrganizer = async (dadosOrg) => {
         return false;
     }
 }
-
 const updateOrganizer  = async function(dadosOrg) {
     let sql = `update  tbl_organizador set
        
@@ -138,9 +136,79 @@ const updateOrganizer  = async function(dadosOrg) {
     }
     
 }
-
 const deleteOrganizer = async function (id) {
     let sql = `delete from tbl_organizador where id = ${id}`;
+
+    let result = await prisma.$executeRawUnsafe(sql);
+
+    if (result) {
+        return true;
+    }
+    else {
+        return false;
+
+    }
+
+}
+  
+
+//JOGADOR
+const selectAllPlayer = async () => {
+
+    let sql = 'select * from tbl_jogador;'
+    let rsJog = await prisma.$queryRawUnsafe(sql)
+    
+    if (rsJog.length > 0) {
+        return rsJog
+    }
+    else {
+        return false
+    }
+}
+const insertPlayer = async (dadosJog) => {
+    let sql = `insert into tbl_jogador
+    (nickname,biografia,id_perfil,id_tag_rede_social,id_time,id_dados_jogador)
+        values
+        ('${dadosJog.nickname}',
+        '${dadosJog.biografia}',
+        '${dadosJog.id_perfil}',
+        '${dadosJog.id_tag_rede_social}',
+        '${dadosJog.id_time}',
+        '${dadosJog.id_dados_jogador}'
+          ) ;`;
+
+
+    let rsJog = await prisma.$queryRawUnsafe(sql)
+    if (rsJog) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+const updatePlayer  = async function(dadosJog) {
+    let sql = `update  tbl_jogador set
+       
+    nickname           = '${dadosJog.nickname}',
+    biografia          = '${dadosJog.biografia}',
+    id_perfil          = '${dadosJog.id_perfil}',
+    id_tag_rede_social = '${dadosJog.id_tag_rede_social}',
+    id_time            = '${dadosJog.id_time}',
+    id_dados_jogador   = '${dadosJog.id_dados_jogador}'
+    where id           =  ${dadosJog.id} ;`
+
+    let rsJog = await prisma.$executeRawUnsafe(sql)
+
+    if (rsJog) {
+        return true;
+    }
+    else {
+        return false;
+    }
+    
+}
+const deletePlayer = async function (id) {
+    let sql = `delete from tbl_jogador where id = ${id}`;
 
     let result = await prisma.$executeRawUnsafe(sql);
 
@@ -168,5 +236,10 @@ module.exports = {
     insertOrganizer,
     updateOrganizer,
     deleteOrganizer,
+    selectAllPlayer,
+    insertPlayer,
+    updatePlayer,
+    deletePlayer
+
 
 }

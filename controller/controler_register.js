@@ -181,6 +181,94 @@ const deletarOrganizador = async (idOrg) => {
     }
 }
 
+//JOGADOR
+const selecionarTodosJogador = async () => {
+   
+    let dadosjog = await register_DAO.selectAllPlayer()
+
+    let dadosJson = {}
+
+    if (dadosjog) {
+        dadosJson.status = 200
+        dadosJson.jog = dadosjog
+        return dadosJson
+    }
+    else {
+        return message.ERROR_NOT_FOUND
+    }
+}
+
+const inserirJogador = async (dadosJog) => {
+    
+    if (dadosJog.nickname           == ' ' || dadosJog.nickname   == undefined || dadosJog.nickname.length > 100  ||
+        dadosJog.biografia          == ' ' || dadosJog.biografia          == undefined || dadosJog.biografia.length > 2000        ||
+        dadosJog.id_perfil          == ' ' || dadosJog.id_perfil          == undefined || 
+        dadosJog.id_tag_rede_social == ' ' || dadosJog.id_tag_rede_social == undefined ||
+        dadosJog.id_time            == ' ' || dadosJog.id_time            == undefined ||          
+        dadosJog.id_dados_jogador   == ' ' || dadosJog.id_dados_jogador   == undefined                    
+     
+    ) {
+
+        return message.ERROR_REQUIRED_DATA
+
+    } else {
+
+        let status = await regis_DAO.insertPlayer(dadosJog)
+        return message.CREATED_ITEM
+    }
+}
+
+const atualizarJogador = async (dadosJog, idJog) =>{
+    
+    if (dadosJog.nickname         == ' ' || dadosJog.nickname             == undefined || dadosJog.nickname.length > 100  ||
+    dadosJog.biografia            == ' ' || dadosJog.biografia            == undefined || dadosJog.biografia.length > 2000||
+    dadosJog.id_perfil            == ' ' || dadosJog.id_perfil            == undefined || 
+    dadosJog.id_tag_rede_social   == ' ' || dadosJog.id_tag_rede_social   == undefined ||          
+    dadosJog.id_time              == ' ' || dadosJog.id_time              == undefined ||          
+    dadosJog.id_dados_jogador     == ' ' || dadosJog.id_dados_jogador     == undefined           
+ 
+){
+    return message.ERROR_REQUIRED_DATA
+
+} else if(idJog == '' || idJog == undefined || isNaN(idJog)){
+
+    return message.ERROR_REQUIRED_ID
+}else {
+    dadosJog.id = idJog
+
+    let status = await regis_DAO.updatePlayer(dadosJog)
+    
+    
+    if(status){
+        let dadosJSon = {} 
+
+        dadosJSon.status = message.UPDATED_ITEM.status
+        dadosJSon.jog = dadosJog
+
+        return dadosJSon
+    }
+    else
+        return message.ERROR_INTERNAL_SERVER    
+}
+}
+const deletarJogador = async (idJog) => {
+
+
+    if(idJog == ' '|| idJog == undefined || isNaN(idJog)){
+        return message.ERROR_REQUIRED_ID
+    }
+    else{
+        let status = await register_DAO.deletePlayer(idJog)
+        if(status){
+            return message.DELETE_ITEM
+        }
+        else{
+            return message.ERROR_INTERNAL_SERVER
+        }
+    }
+}
+
+
 
 
 
@@ -192,7 +280,12 @@ module.exports = {
     selecionarTodosOrganizador,
     inserirOrganizador,
     atualizarOrganizador,
-    deletarOrganizador 
+    deletarOrganizador,
+    selecionarTodosJogador,
+    inserirJogador,
+    atualizarJogador,
+    deletarJogador
+
 
     
 }

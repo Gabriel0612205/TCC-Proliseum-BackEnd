@@ -6,7 +6,7 @@ var prisma = new PrismaClient();
 
 const selectUser = async () => {
 
-    let sql = 'select * from tbl_usuario;'
+    let sql = 'select * from tbl_perfil;'
     let rsTeacher = await prisma.$queryRawUnsafe(sql)
 
     if (rsTeacher.length > 0) {
@@ -16,4 +16,9 @@ const selectUser = async () => {
 
         return false
     }
+}
+
+
+module.exports = {
+    selectUser
 }

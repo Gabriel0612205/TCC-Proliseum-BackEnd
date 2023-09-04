@@ -23,8 +23,8 @@ app.use((request, response, next) => {
  
  var controllerRegister= require('./controller/controler_register');
  
- //jogador
- app.get('/v1/proliseum/player/register', cors(), async function (request,response){
+ //Perfil
+ app.get('/v1/proliseum/user/register', cors(), async function (request,response){
  
     let dados = await controllerRegister.selecionarTodososPerfil()
     response.status(200)
@@ -32,7 +32,7 @@ app.use((request, response, next) => {
     
 });
 
- app.post('/v1/proliseum/player/post', cors(), bodyJson, async function (request,response){
+ app.post('/v1/proliseum/user/post', cors(), bodyJson, async function (request,response){
     let contentType = request.headers['content-type'];
 
     if(String(contentType).toLowerCase() == 'application/json'){
@@ -51,7 +51,7 @@ app.use((request, response, next) => {
     
 });
 
- app.delete('/v1/proliseum/player/delete/:id', cors(), async function (request, response) {
+ app.delete('/v1/proliseum/user/delete/:id', cors(), async function (request, response) {
   
 
     let idPrf = request.params.id 
@@ -62,7 +62,7 @@ app.use((request, response, next) => {
  
 });
 
- app.put('/v1/proliseum/player/update/:id', cors(), bodyJson, async function(request, response) {  
+ app.put('/v1/proliseum/user/update/:id', cors(), bodyJson, async function(request, response) {  
 
     let dados = request.body
     let idPrf = request.params.id
@@ -125,14 +125,59 @@ app.delete('/v1/proliseum/organizer/delete/:id', cors(), async function (request
 
 });
 
-//LOGIN
+//JOGADO
 app.get('/v1/proliseum/player/register', cors(), async function (request,response){
  
-   let dados = await controllerRegister.selecionarTodososPerfil()
+   let dados = await controllerRegister.selecionarTodosJogador()
    response.status(200)
    response.json(dados)
    
 });
+
+app.post('/v1/proliseum/player/post', cors(), bodyJson, async function (request,response){
+
+   
+   let contentType = request.headers['content-type'];
+
+   if(String(contentType).toLowerCase() == 'application/json'){
+
+      let dadosBody = request.body;
+
+      let resultInsertJogador = await controllerRegister.inserirJogador(dadosBody)
+      response.status(resultInsertJogador.status)
+      response.json(resultInsertJogador)
+      
+   }
+   else{
+      response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+      response.json(message.ERROR_INVALID_CONTENT_TYPE)
+   }
+   
+});
+
+app.put('/v1/proliseum/player/update/:id', cors(), bodyJson, async function(request, response) {  
+
+   let dados = request.body
+   let idJog = request.params.id
+   let resultUpdateJogador = await controllerRegister.atualizarJogador(dados, idJog)
+
+   response.status(resultUpdateJogador.status)
+   response.json(resultUpdateJogador)
+ 
+});
+
+app.delete('/v1/proliseum/player/delete/:id', cors(), async function (request, response) {
+  
+
+   let idJog = request.params.id 
+   let resultDeleteJogador = await controllerRegister.deletarJogador(idJog)
+
+   response.status(resultDeleteJogador.status)
+   response.json(resultDeleteJogador)
+
+});
+
+
 
 
 
