@@ -44,6 +44,7 @@ const inserirPerfil = async (dadosPrf) => {
 
 const deletarPerfil = async (idPrf) => {
 
+
     if(idPrf == ' '|| idPrf == undefined || isNaN(idPrf)){
         return message.ERROR_REQUIRED_ID
     }
@@ -111,9 +112,7 @@ const selecionarTodosOrganizador = async () => {
     }
 }
 
-
 const inserirOrganizador = async (dadosOrg) => {
-    
     
         if (dadosOrg.nome_organizacao   == ' ' || dadosOrg.nome_organizacao   == undefined || dadosOrg.nome_organizacao.length > 100  ||
             dadosOrg.foto_organizacao   == ' ' || dadosOrg.foto_organizacao   == undefined ||
@@ -122,14 +121,65 @@ const inserirOrganizador = async (dadosOrg) => {
             dadosOrg.id_tag_rede_social == ' ' || dadosOrg.id_tag_rede_social == undefined           
          
         ) {
-        
+
             return message.ERROR_REQUIRED_DATA
 
         } else {
+
             let status = await regis_DAO.insertOrganizer(dadosOrg)
             return message.CREATED_ITEM
         }
+}
+ 
+const atualizarOrganizador = async (dadosOrg, idOrg) =>{
+    
+    if (dadosOrg.nome_organizacao == ' ' || dadosOrg.nome_organizacao     == undefined || dadosOrg.nome_organizacao.length > 100  ||
+    dadosOrg.foto_organizacao     == ' ' || dadosOrg.foto_organizacao     == undefined ||
+    dadosOrg.biografia            == ' ' || dadosOrg.biografia            == undefined || dadosOrg.biografia.length > 2000        ||
+    dadosOrg.id_perfil            == ' ' || dadosOrg.id_perfil            == undefined || 
+    dadosOrg.id_tag_rede_social   == ' ' || dadosOrg.id_tag_rede_social   == undefined           
+ 
+){
+    return message.ERROR_REQUIRED_DATA
+
+} else if(idOrg == '' || idOrg == undefined || isNaN(idOrg)){
+
+    return message.ERROR_REQUIRED_ID
+}else {
+    dadosOrg.id = idOrg
+
+    let status = await regis_DAO.updateOrganizer(dadosOrg)
+    
+    
+    if(status){
+        let dadosJSon = {} 
+
+        dadosJSon.status = message.UPDATED_ITEM.status
+        dadosJSon.org = dadosOrg
+
+        return dadosJSon
     }
+    else
+        return message.ERROR_INTERNAL_SERVER    
+}
+}
+
+const deletarOrganizador = async (idOrg) => {
+
+
+    if(idOrg == ' '|| idOrg == undefined || isNaN(idOrg)){
+        return message.ERROR_REQUIRED_ID
+    }
+    else{
+        let status = await register_DAO.deleteOrganizer(idOrg)
+        if(status){
+            return message.DELETE_ITEM
+        }
+        else{
+            return message.ERROR_INTERNAL_SERVER
+        }
+    }
+}
 
 
 
@@ -140,7 +190,9 @@ module.exports = {
     deletarPerfil,
     atualizarPerfil,
     selecionarTodosOrganizador,
-    inserirOrganizador
+    inserirOrganizador,
+    atualizarOrganizador,
+    deletarOrganizador 
 
     
 }

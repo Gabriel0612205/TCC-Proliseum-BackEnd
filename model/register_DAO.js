@@ -137,7 +137,7 @@ const updateOrganizer  = async function(dadosOrg) {
         return false;
     }
     
-    }
+}
 
 const deleteOrganizer = async function (id) {
     let sql = `delete from tbl_organizador where id = ${id}`;

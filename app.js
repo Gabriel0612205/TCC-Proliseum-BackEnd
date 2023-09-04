@@ -30,7 +30,7 @@ app.use((request, response, next) => {
     response.status(200)
     response.json(dados)
     
-})
+});
 
  app.post('/v1/proliseum/player/post', cors(), bodyJson, async function (request,response){
     let contentType = request.headers['content-type'];
@@ -49,9 +49,10 @@ app.use((request, response, next) => {
        response.json(message.ERROR_INVALID_CONTENT_TYPE)
     }
     
-})
+});
 
  app.delete('/v1/proliseum/player/delete/:id', cors(), async function (request, response) {
+  
 
     let idPrf = request.params.id 
     let resultDeletePerfil = await controllerRegister.deletarPerfil(idPrf)
@@ -59,7 +60,7 @@ app.use((request, response, next) => {
     response.status(resultDeletePerfil.status)
     response.json(resultDeletePerfil)
  
-})
+});
 
  app.put('/v1/proliseum/player/update/:id', cors(), bodyJson, async function(request, response) {  
 
@@ -79,10 +80,11 @@ app.get('/v1/proliseum/organizer/register', cors(), async function (request,resp
     response.status(200)
     response.json(dados)
     
-})
-
+});
 
 app.post('/v1/proliseum/organizer/post', cors(), bodyJson, async function (request,response){
+
+    
     let contentType = request.headers['content-type'];
 
     if(String(contentType).toLowerCase() == 'application/json'){
@@ -99,7 +101,39 @@ app.post('/v1/proliseum/organizer/post', cors(), bodyJson, async function (reque
        response.json(message.ERROR_INVALID_CONTENT_TYPE)
     }
     
-})
+});
+
+app.put('/v1/proliseum/organizer/update/:id', cors(), bodyJson, async function(request, response) {  
+
+   let dados = request.body
+   let idPrf = request.params.id
+   let resultUpdateOrganizador = await controllerRegister.atualizarOrganizador(dados, idPrf)
+
+   response.status(resultUpdateOrganizador.status)
+   response.json(resultUpdateOrganizador)
+ 
+});
+
+app.delete('/v1/proliseum/organizer/delete/:id', cors(), async function (request, response) {
+  
+
+   let idOrg = request.params.id 
+   let resultDeleteOrganizador = await controllerRegister.deletarOrganizador(idOrg)
+
+   response.status(resultDeleteOrganizador.status)
+   response.json(resultDeleteOrganizador)
+
+});
+
+//LOGIN
+app.get('/v1/proliseum/player/register', cors(), async function (request,response){
+ 
+   let dados = await controllerRegister.selecionarTodososPerfil()
+   response.status(200)
+   response.json(dados)
+   
+});
+
 
 
 
